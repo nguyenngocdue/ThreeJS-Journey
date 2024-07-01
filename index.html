@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>3D Cube Control</title>
+    <style>
+        #controls {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 100;
+        }
+
+        input[type='range'] {
+            width: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="controls">
+        <label for="x-slider">X Position:</label>
+        <input type="range" id="x-slider" min="-3" max="3" value="0.7" step="0.1"><br>
+
+        <label for="y-slider">Y Position:</label>
+        <input type="range" id="y-slider" min="-3" max="3" value="0.6" step="0.1"><br>
+
+        <label for="z-slider">Z Rotation:</label>
+        <input type="range" id="z-slider" min="0" max="6.28" value="1" step="0.1"><br>
+    </div>
+
+    <canvas class="webgl"></canvas>
+    <script type="module" src="./script.js"></script>
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script> -->
+</body>
+
+</html>
