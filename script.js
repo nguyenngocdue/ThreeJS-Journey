@@ -20,9 +20,26 @@ window.addEventListener('mousemove', (event) => {
 const scene = new THREE.Scene();
 
 // Object
-const geometry = new THREE.BoxGeometry(1, 1, 1, 5, 5, 5);
+// const geometry = new THREE.BoxGeometry(1, 1, 1, 2, 2, 2);
+// const geometry = new THREE.SphereGeometry(1, 12, 12);
+
+
+// using BufferGeometry
+const geometry = new THREE.BufferGeometry();
+
+const positionsArray = new Float32Array([
+    0, 0, 0, // first vertice
+    0, 1, 0, // second vertice
+    1, 0, 0, // third vertice
+])
+
+const positionsAttribute = new THREE.BufferAttribute(positionsArray, 3);
+geometry.setAttribute('position', positionsAttribute);
+
+
+
 const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-const wireframeMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: false });
+const wireframeMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
 
 const mesh = new THREE.Mesh(geometry, wireframeMaterial);
 scene.add(mesh);
@@ -32,8 +49,8 @@ scene.add(mesh);
 
 // size
 const sizes = {
-    width: 800,
-    height: 600
+    width: window.innerWidth,
+    height: window.innerHeight
 }
 
 // Camera
@@ -137,3 +154,34 @@ zSlider.addEventListener('input', function () {
 // mesh.rotation.x = Math.PI * 0.25
 // mesh.rotation.y = Math.PI * 0.25
 // mesh.rotation.z = Math.PI * 0.25
+
+
+// resize
+window.addEventListener('resize', () => {
+    sizes.width = window.innerWidth;
+    sizes.height = window.innerHeight;
+    camera.aspect = sizes.width / sizes.height;
+    camera.updateProjectionMatrix();
+    renderer.setSize(sizes.width, sizes.height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+})
+
+// double click
+window.addEventListener('dblclick', () => {
+
+    const fullscreenElement = document.fullscreenElement || document.webkitFullScreenElement
+    if (!fullscreenElement) {
+        if (canvas.requestFullscreen) {
+            canvas.requestFullscreen();
+        } else if (canvas.webkitRequestFullscreen) {
+            canvas.webkitRequestFullscreen();
+        };
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        }
+    }
+})
