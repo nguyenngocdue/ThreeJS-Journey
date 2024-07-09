@@ -9,9 +9,9 @@ const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
 const mesh = new THREE.Mesh(geometry, material);
 
 scene.add(mesh);
-mesh.position.x = 0.7
-mesh.position.y = 0.6
-mesh.rotation.z = 1;
+mesh.position.x = 0
+mesh.position.y = 0
+mesh.rotation.z = 0;
 
 
 
@@ -37,6 +37,9 @@ renderer.render(scene, camera);
 
 // Axes Helpers
 const axesHelper = new THREE.AxesHelper(2);
+mesh.scale.x = 2
+mesh.scale.y = 0.25
+mesh.scale.z = 0.5
 scene.add(axesHelper);
 
 
@@ -67,3 +70,5 @@ zSlider.addEventListener('input', function () {
 });
 
 
+mesh.rotation.x = Math.PI * 0.25
+mesh.rotation.y = Math.PI * 0.25
