@@ -1,5 +1,8 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import GUI from 'lil-gui';
+import * as dat from 'lil-gui';
+import gsap from 'gsap';
 
 
 /**
@@ -15,7 +18,6 @@ window.addEventListener('mousemove', (event) => {
 })
 
 
-
 // Scene
 const scene = new THREE.Scene();
 
@@ -28,24 +30,72 @@ const scene = new THREE.Scene();
 const geometry = new THREE.BufferGeometry();
 
 const positionsArray = new Float32Array([
-    0, 0, 0, // first vertice
-    0, 1, 0, // second vertice
-    1, 0, 0, // third vertice
-])
+    0, 0, 0, // Vertex 1
+    1, 0, 0, // Vertex 2
+    1, 1, 0, // Vertex 3
+    0, 1, 0, // Vertex 4
+    0, 0, 1, // Vertex 5
+    1, 0, 1, // Vertex 6
+    1, 1, 1, // Vertex 7
+    0, 1, 1  // Vertex 8
+]);
+
+const indices = [
+    0, 1, 2, 0, 2, 3, // Front face
+    1, 5, 6, 1, 6, 2, // Right face
+    5, 4, 7, 5, 7, 6, // Back face
+    4, 0, 3, 4, 3, 7, // Left face
+    3, 2, 6, 3, 6, 7, // Top face
+    4, 5, 1, 4, 1, 0  // Bottom face
+];
 
 const positionsAttribute = new THREE.BufferAttribute(positionsArray, 3);
 geometry.setAttribute('position', positionsAttribute);
+geometry.setIndex(indices);
+
+
+// GUI
+/**
+ * Debug
+ */
+// const gui = new GUI();
+const gui = new dat.GUI();
+const debugObject = {};
+debugObject.color = '3a6ea6';
 
 
 
-const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-const wireframeMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+gui.addColor(debugObject, 'color').onChange((value) => {
+    material.color.set(debugObject.color);
+});
 
-const mesh = new THREE.Mesh(geometry, wireframeMaterial);
-scene.add(mesh);
+// Create Mesh with Material
+const material = new THREE.MeshBasicMaterial({ color: debugObject.color, wireframe: true });
+const boxMesh = new THREE.Mesh(geometry, material);
+
+
+gui.add(boxMesh.position, 'y').min(-3).max(3).step(0.01).name('elevation');
+gui.add(boxMesh, 'visible')
+gui.add(material, 'wireframe')
+
+debugObject.spin = () => {
+    gsap.to(boxMesh.rotation, { duration: 1, y: boxMesh.rotation.y + Math.PI * 2 })
+}
+gui.add(debugObject, 'spin')
+
+
+
+
+// Add to Scene
+scene.add(boxMesh);
+
 //mesh.position.x = 2
 // mesh.position.y = 0
 // mesh.rotation.z = 0;
+
+
+
+
 
 // size
 const sizes = {
@@ -62,7 +112,7 @@ const camera = new THREE.PerspectiveCamera(50, sizes.width / sizes.height, 0.1, 
 // camera.position.x = 2;
 // camera.position.y = 2;
 camera.position.z = 3;
-camera.lookAt(mesh.position);
+camera.lookAt(boxMesh.position);
 scene.add(camera);
 
 
