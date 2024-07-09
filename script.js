@@ -1,4 +1,20 @@
 import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+
+/**
+ * Cursor
+ */
+const cursor = {
+    x: 0,
+    y: 0,
+}
+window.addEventListener('mousemove', (event) => {
+    cursor.x = -(event.clientX / sizes.width - 0.5);
+    cursor.y = event.clientY / sizes.height - 0.5;
+})
+
+
 
 // Scene
 const scene = new THREE.Scene();
@@ -21,7 +37,7 @@ const sizes = {
 }
 
 // Camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(50, sizes.width / sizes.height, 0.1, 1000);
 // const aspectRatio = sizes.width / sizes.height;
 // const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 1000)
 // const camera = new THREE.OrthographicCamera(-1 * aspectRatio, 1 * aspectRatio, 1 * aspectRatio, -1 * aspectRatio, 0.1, 1000);
@@ -32,6 +48,7 @@ camera.position.z = 3;
 camera.lookAt(mesh.position);
 scene.add(camera);
 
+
 // canvas
 const canvas = document.querySelector('canvas.webgl');
 // Renderer
@@ -40,14 +57,40 @@ renderer.setSize(sizes.width, sizes.height);
 renderer.render(scene, camera);
 
 
+// Controls
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+// controls.target.y = 1;
+// controls.update();
+
 // Animate
 const clock = new THREE.Clock();
 const tick = () => {
     const elapsedTime = clock.getElapsedTime();
     // // Update objects
     // mesh.rotation.y = elapsedTime
-    // Render
+
+    // // Update camera
+    // // camera.position.x = cursor.x * 10;
+    // // camera.position.y = cursor.y * 10;
+    // camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3;
+    // camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3;
+    // camera.position.y = cursor.y * 5
+    // camera.lookAt(mesh.position);
+
+    // Update objects
+
+    // Update controls
+    controls.update();
+
+    // // Render
     renderer.render(scene, camera);
+
+    // Call tick again on the next frame
+    // window.requestAnimationFrame(tick);
+
+    // // Render
+    // renderer.render(scene, camera);
 
     // Call tick again on the next frame
     window.requestAnimationFrame(tick);
